@@ -1,3 +1,14 @@
+
+.idea/*
+*/.idea/*
+.vscode/*
+
+*.blend1
+
+*.code-workspace
+
+cmake-build-debug/*
+
 # Visual Studio 2015 user specific files
 .vs/
 
