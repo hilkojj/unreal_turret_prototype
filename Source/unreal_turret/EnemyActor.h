@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "Components/MaterialBillboardComponent.h"
@@ -8,6 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "EnemyActor.generated.h"
 
+/**
+ * An enemy has Health and moves around.
+ * They also show a HealthBar above them.
+ **/
 UCLASS()
 class UNREAL_TURRET_API AEnemyActor : public AActor
 {
@@ -29,8 +31,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UMaterialBillboardComponent *HealthBarBillboard;
 
+	// The direction this enemy moves back and forth
 	FVector MoveDirection;
 
+	// The distance this enemy travels in MoveDirection
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float MovementMultiplier = 200;
 	

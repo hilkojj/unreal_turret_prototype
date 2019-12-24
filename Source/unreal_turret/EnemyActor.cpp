@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "EnemyActor.h"
 
@@ -21,7 +19,7 @@ void AEnemyActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MoveDirection = FMath::VRand();
+	MoveDirection = FMath::VRand(); // Enemy will move in random direction
 	MoveDirection.Z = 0; // don't move vertically.
 	MoveDirection.Normalize();
 }
@@ -31,9 +29,9 @@ void AEnemyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Update healthbar billboard:
+	// Update healthbar billboard width:
 	auto Billboard = HealthBarBillboard->Elements[0];
-	Billboard.BaseSizeY = Health * 80;
+	Billboard.BaseSizeY = Health * 80; // this is the width
 	HealthBarBillboard->SetElements(TArray<FMaterialSpriteElement>({ Billboard }));
 
 	// Update movement:
@@ -44,7 +42,7 @@ void AEnemyActor::Tick(float DeltaTime)
 	if (Health <= 0)
 	{
 		Destroy();
-		// todo: register score
+		// todo: register score?
 	}
 }
 

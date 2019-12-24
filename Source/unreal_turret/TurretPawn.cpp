@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include <cmath>
 
 #include "TurretPawn.h"
@@ -56,13 +54,11 @@ void ATurretPawn::MouseXMoved(float Amount)
 
 void ATurretPawn::StartShooting()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Start shooting"));
 	if (Weapon) Weapon->Shooting = true;
 }
 
 void ATurretPawn::StopShooting()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Stop shooting"));
 	if (Weapon) Weapon->Shooting = false;
 }
 

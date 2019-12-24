@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "EnemySpawningFloor.h"
 #include "Kismet/GameplayStatics.h"
@@ -17,7 +15,6 @@ AEnemySpawningFloor::AEnemySpawningFloor()
 void AEnemySpawningFloor::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -25,7 +22,7 @@ void AEnemySpawningFloor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (FMath::Rand() / float(RAND_MAX) < SpawnRate * DeltaTime)
+	if (FMath::Rand() / float(RAND_MAX) < SpawnRate * DeltaTime) // this statement is roughly 'SpawnRate' times per second true.
 	{
 		// Spawn an enemy!
 		// IF limit is not reached...
@@ -33,10 +30,8 @@ void AEnemySpawningFloor::Tick(float DeltaTime)
 		TArray<AActor*> FoundEnemies;
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyActor::StaticClass(), FoundEnemies);
 
-		UE_LOG(LogTemp, Warning, TEXT("CURRENT NR OF ENEMIES: %d"), FoundEnemies.Num());
-
 		if (FoundEnemies.Num() > MaxEnemiesInWorld)
-			return; // limit reached
+			return; // limit reached, don't spawn more.
 
 		UE_LOG(LogTemp, Warning, TEXT("SPAWN ENEMY!"));
 
@@ -46,17 +41,26 @@ void AEnemySpawningFloor::Tick(float DeltaTime)
 
 		FTransform EnemyTransform;
 
-		FVector FloorOrigin, FloorExtent;
+		// spawn enemy on random place on the floor:
+		EnemyTransform.SetLocation(
+			GetRandomPositionOnFloor()
+		);
 
-		GetActorBounds(true, FloorOrigin, FloorExtent);
-
-		FloorOrigin -= FloorExtent;
-		FloorOrigin.Z = 0;
-		FloorExtent *= 2;
-
-		EnemyTransform.SetLocation(FloorOrigin + FloorExtent * FVector(FMath::Rand() / float(RAND_MAX), FMath::Rand() / float(RAND_MAX), 0));
-
+		// spawn enemy:
 		GetWorld()->SpawnActor<AEnemyActor>(EnemyClass, EnemyTransform, SpawnParams);
 	}
+}
+
+FVector AEnemySpawningFloor::GetRandomPositionOnFloor()
+{
+	// Get size of floor:
+	FVector FloorOrigin, FloorExtent;
+	GetActorBounds(true, FloorOrigin, FloorExtent);
+
+	FloorOrigin -= FloorExtent;
+	FloorOrigin.Z = 0;
+	FloorExtent *= 2;
+
+	return FloorOrigin + FloorExtent * FVector(FMath::Rand() / float(RAND_MAX), FMath::Rand() / float(RAND_MAX), 0);
 }
 

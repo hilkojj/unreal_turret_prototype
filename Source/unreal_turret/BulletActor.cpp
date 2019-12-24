@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "BulletActor.h"
 #include "EnemyActor.h"
 
@@ -31,17 +28,16 @@ void ABulletActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	TimeLeft -= DeltaTime;
-	if (TimeLeft <= 0) Destroy();
+	if (TimeLeft <= 0) Destroy(); // bullet has lived for too long and is probably not gonna hit anything anymore.
 }
 
 void ABulletActor::OnHit(AActor *Self, AActor *Other, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("HIT!"));
 	if (AEnemyActor *Enemy = Cast<AEnemyActor>(Other))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("HIT ENEMY!"));
+		UE_LOG(LogTemp, Warning, TEXT("ENEMY HIT!"));
 		// We hit an enemy
 		Enemy->Health -= Damage;
 	}
-	Destroy();
+	Destroy(); // Destroy bullet after hitting anything.
 }

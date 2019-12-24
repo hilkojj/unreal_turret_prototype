@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "WeaponActor.h"
 
@@ -10,7 +8,6 @@ AWeaponActor::AWeaponActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMesh");
-
 }
 
 // Called when the game starts or when spawned
@@ -18,6 +15,7 @@ void AWeaponActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Print the weapon's properties to the screen:
 	FString Message = FString::Printf(
 		TEXT("---WEAPON PROPERTIES:---\nFire Rate: %f\nDamage: %f\nTurret Rotation Speed: %f\n------"), 
 		FireRate, BulletDamage, TurretRotationSpeed
@@ -32,7 +30,7 @@ void AWeaponActor::Tick(float DeltaTime)
 
 	TimeSinceLastShot += DeltaTime;
 
-	if (Shooting && TimeSinceLastShot >= 1 / FireRate)
+	if (Shooting && TimeSinceLastShot >= 1 / FireRate) // 1/FireRate is the time between shots
 	{
 		// Shoot!!
 
@@ -42,7 +40,7 @@ void AWeaponActor::Tick(float DeltaTime)
 		SpawnParams.bNoFail = true;
 
 		FTransform BulletTransform;
-		BulletTransform.SetLocation(GetActorForwardVector() * 250 + GetActorLocation());
+		BulletTransform.SetLocation(GetActorForwardVector() * 220 + GetActorLocation());
 		BulletTransform.SetRotation(GetActorRotation().Quaternion());
 		BulletTransform.SetScale3D(FVector(1));
 

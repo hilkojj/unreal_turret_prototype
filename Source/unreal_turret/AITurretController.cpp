@@ -1,7 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "Kismet/GameplayStatics.h"
-#include "EnemyActor.h"
 #include "TurretPawn.h"
 #include "AITurretController.h"
 
@@ -10,23 +7,34 @@ void AAITurretController::Tick(float DeltaTime)
     ATurretPawn *Turret = Cast<ATurretPawn>(GetPawn());
     if (!Turret) return; // Controller is not controlling a Turret
 
-    UE_LOG(LogTemp, Warning, TEXT("hi!"));
-
+    // Find ALL enemies:
     TArray<AActor*> FoundEnemies;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyActor::StaticClass(), FoundEnemies);
 
     if (FoundEnemies.Num() == 0)
     {
-        Turret->StopShooting();
+        Turret->StopShooting(); // No enemies in world. Stop shooting.
         return;
     }
 
-    auto Delta = FoundEnemies[0]->GetActorLocation() - Turret->GetActorLocation();
-	float Angle = FMath::RadiansToDegrees(atan2(Delta.Y, Delta.X));
+    for (auto Enemy : FoundEnemies)
+    {    
+        auto Delta = Enemy->GetActorLocation() - Turret->GetActorLocation(); // difference in enemy & turret location
 
-    Turret->TargetTurretAngle = Angle;
+        if (Delta.Size() > 700) continue; // Enemy is probably too far away to shoot at. TODO: don't make range hardcoded.
 
-    if (FMath::Abs(Turret->PreviousTurretAngle - Turret->TargetTurretAngle) < 10)
-        Turret->StartShooting();
-    else Turret->StopShooting();
+        float Angle = FMath::RadiansToDegrees(atan2(Delta.Y, Delta.X)); // Angle between enemy & turret
+
+        Turret->TargetTurretAngle = Angle; // Setting Turret->TargetTurretAngle will make the Turret rotate to the new angle.
+
+        float AngleDelta = FMath::Abs(Turret->PreviousTurretAngle - Angle);
+
+        // If the turret is (almost) at the desired angle -> start shooting the enemy
+        if (AngleDelta < 20 || AngleDelta > 340)
+            Turret->StartShooting();
+        else 
+            Turret->StopShooting(); // Turret needs to rotate more before the shooting can start.
+
+        break;
+    }
 }
